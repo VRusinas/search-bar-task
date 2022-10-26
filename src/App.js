@@ -1,25 +1,36 @@
-import logo from './logo.svg';
+import React, {useState, useEffect} from "react"
 import './App.css';
+import SearchBar from './components/search-bar/search-bar.components';
+import AddButton from './components/add-button/add-button.component';
+
+
 
 function App() {
+
+  const [itemState, setItemState] = useState([]);
+
+  useEffect (() => {
+  fetch('https://fakestoreapi.com/products')
+              .then(res=>res.json())
+              .then(itemsArray=>{
+                const newItemsState = itemsArray.map((item)=>{
+                  return item.title
+                })
+                setItemState(newItemsState);
+              })
+  },[])
+
+
+  const hasItems = itemState.length > 0
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+   
+      {hasItems ? <SearchBar items = {itemState}/> : "Loading"}
+      <AddButton incrementCount={5} />
     </div>
   );
+
 }
 
 export default App;
+
